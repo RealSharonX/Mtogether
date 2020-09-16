@@ -67,6 +67,7 @@ router.post("/", [
         })
     }
 })
+
 function genRoom(length) {
     let id = String(crypto.randomBytes(length).toString("hex"));
     return id;

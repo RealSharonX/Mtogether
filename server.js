@@ -3,6 +3,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 const express = require("express");
+const path = require("path");
 const expressLayouts = require("express-ejs-layouts");
 const bodyParser = require("body-parser");
 const session = require("express-session");
@@ -31,14 +32,14 @@ connection.on("error", () => {
 });
 //connection check
 connection.once("open", () => {
-    console.log(`connected to MongoDb,readyState = ${mongoose.connection.readyState}`);
+    console.log(`connected to MongoDb,readyState is = ${mongoose.connection.readyState}`);
 })
 
 app.set("view engine", "ejs")
-app.set("views", __dirname + "/views")
+app.set("views", path.join(__dirname, "/views"));
 app.set("layout", "layouts/layout")
 app.use(expressLayouts)
-app.use(express.static("public"))
+app.use(express.static(path.join(__dirname, "/public")));
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json());
 app.use(session({
@@ -56,6 +57,6 @@ app.use("/", indexRouter)
 const createRouter = require("./routes/create");
 app.use("/create", createRouter)
 
-app.listen(process.env.PORT || 3000, () => {
+app.listen(process.env.PORT, () => {
     console.log(`server started on port ${process.env.PORT || 3000}`);
 });
