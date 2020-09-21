@@ -47,7 +47,7 @@ connection.once("open", () => {
     console.log(`connected to MongoDb,readyState is = ${mongoose.connection.readyState}`);
 })
 
-let Room = require("../models/room")
+let Room = require("models/room")
 
 const io = socket(server);
 
