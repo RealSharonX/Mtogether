@@ -27,7 +27,6 @@ passport.use(new DiscordStrategy({
             const newRoom = await Room.create({
                 creatorId: profile.id,
                 creatorName: profile.username,
-                fans: [],
                 song: "unknown",
                 tracked: false
             });
