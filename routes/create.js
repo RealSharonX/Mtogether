@@ -2,75 +2,50 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const crypto = require("crypto");
 const bodyParser = require("body-parser");
-const { check, validationResult } = require("express-validator");
-let Room = require("../models/room");
 
-router.get("/", (req, res) => {
-    res.render("create", {
-        errors: null,
-    })
-})
+//bring model
+let Room = require("../models/room")
 
-router.get("/bot", (req, res) => {
-    res.render("inviteBot", {
-        creator: req.session.creator
-    })
-})
-
-router.post("/", [
-    check("discId").not().isEmpty().withMessage("discord ID is required!"),
-    check("discId")
-        .custom((value, {req, loc, path}) => {
-            let str = value.split("#");
-            if (value == str) {
-                throw new Error("wrong discord id no # found");
-            } else if (str.length > 2) {
-                throw new Error("wrong discord id more than 2 # found")
-            } else if (!(value.split(" ") == value)) {
-                throw new Error("wrong discord id spaces found in name")
-            }else if (isNaN(Number(str[1]))) {
-                throw new Error("letters found in the numbers part")
-            } else if (str[1].length < 4) {
-                throw new Error("wrong discord id 4 numbers required after #")
-            } else if (str[1].length > 4) {
-                throw new Error("wrong discord id more than 4 numbers after #")
-            } else {
-                return value;
-            }
-        }).withMessage("wrong discord id")
-], (req, res, error) => {
-    
-    const errors = validationResult(req);
-    console.log(req.body);
-    
-    if (!errors.isEmpty()) {
-        res.render("create", {
-            errors: errors.errors[0].msg
-        });
+router.get("/", isAuthorized, (req, res) => {
+    if (req.user.tracked) {
+        res.redirect("/create/share")
     } else {
-        let newRoom = new Room({
-            joinId: genRoom(10),
-            creator: req.body.discId,
-            fans: [],
-            song: "unknown",
+        res.render("create", {
+            creator: req.user.creatorName,
+            user: req.user.creatorId,
         });
-        req.session.creator = newRoom.creator;
-        req.session.save()
-        newRoom.save((err) => {
-            if (err) {
-                console.log(err);
-            } else {
-                res.redirect("/create/bot")
-            }
-        })
     }
 })
 
-function genRoom(length) {
-    let id = String(crypto.randomBytes(length).toString("hex"));
-    return id;
+router.post("/", (req, res) => {
+    let query = {creatorId: req.body.id};
+    let room = {song: req.body.song, tracked: true};
+    Room.findOneAndUpdate(query, room, (err, result) => {
+        if (err) {
+            console.log(err)
+        } else {
+            console.log(req.body.id);
+            req.io.to(result._id).broadcast.emit("newMusic", req.body.song);
+        }
+    })
+    res.sendStatus(200).end();
+})
 
+router.get("/share", isAuthorized, (req, res) => {
+    res.render("share", {
+        share: req.user._id,
+    });
+})
+
+function isAuthorized(req, res, next) {
+    if (req.isAuthenticated()) {
+        console.log("User is logged in.");
+        next();
+    } else {
+        console.log("User is not logged in.");
+        res.redirect("/auth");
+    }
 }
+
 module.exports = router;

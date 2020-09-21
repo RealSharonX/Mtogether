@@ -20,9 +20,13 @@
     "express-messages": "^1.0.1",
     "express-session": "^1.17.1",
     "express-validator": "^6.6.1",
-    "mongoose": "^5.10.4"
+    "mongoose": "^5.10.4",
+    "passport": "^0.4.1",
+    "passport-discord": "^0.1.4",
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {
-    "eslint": "^7.8.1"
+    "eslint": "^7.8.1",
+    "nodemon": "^2.0.4"
   }
 }

@@ -1,8 +1,22 @@
-<% if (errors) { %>
-    <div><%=errors%></div>
-<% } %>
-<form method="POST" action="/create/">
-    <label for="discId">Insert your discord ID (case and space sensetive):</label><br>
-    <input type="text" name="discId" placeholder="example: Name#0000"><br>
-    <input type="submit" value="Submit">
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Mtogether</title>
+    <script> 
+        const sessionOwner = <%= user %>;
+    </script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script defer src="/javascripts/socket.js "></script>
+</head>
+<body>
+    <div class="container">
+        <div class="error-message"></div>
+        <div class="inner-container">     
+            <p>mfsss put this bot in any server you are part of and use the command !Spotify <%= creator %> </p>
+        </div>
+    </div>
+</body>
+</html>

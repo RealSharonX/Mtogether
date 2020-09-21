@@ -4,13 +4,24 @@ if (process.env.NODE_ENV !== "production") {
 
 const express = require("express");
 const path = require("path");
-const expressLayouts = require("express-ejs-layouts");
 const bodyParser = require("body-parser");
+const socket = require("socket.io");
 const session = require("express-session");
 const mongoose = require("mongoose");
+const passport = require("passport");
 const MongoStore = require("connect-mongo")(session);
+const discordStrategy = require("./config/pass-disc");
+
+const indexRouter = require("./routes/index");
+const createRouter = require("./routes/create");
+const authRouter = require("./routes/auth");
+const joinRouter = require("./routes/join");
 
 const app = express();
+
+const server = app.listen(process.env.PORT, () => {
+    console.log(`server started on port ${process.env.PORT}`);
+});
 
 const dbString = process.env.URI;
 const dbOptions = {
@@ -30,15 +41,29 @@ const sessionStore= new MongoStore({
 connection.on("error", () => {
     console.log(error)
 });
+
 //connection check
 connection.once("open", () => {
     console.log(`connected to MongoDb,readyState is = ${mongoose.connection.readyState}`);
 })
 
+let Room = require("../models/room")
+
+const io = socket(server);
+
+app.use((request, response, next) => {
+    request.io = io;
+    next();
+});
+
+io.on("connection", socket => {
+    socket.on("userIn", (room) => {
+        socket.join(room);
+    })
+})
+
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "/views"));
-app.set("layout", "layouts/layout")
-app.use(expressLayouts)
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json());
@@ -51,12 +76,9 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24 * 14
     }
 }))
-
-const indexRouter = require("./routes/index");
+app.use(passport.initialize());
+app.use(passport.session());
 app.use("/", indexRouter)
-const createRouter = require("./routes/create");
 app.use("/create", createRouter)
-
-app.listen(process.env.PORT, () => {
-    console.log(`server started on port ${process.env.PORT || 3000}`);
-});
+app.use("/auth", authRouter)
+app.use("/join", joinRouter)

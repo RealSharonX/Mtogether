@@ -3,26 +3,26 @@ const mongoose = require("mongoose");
 //Room scheme
 
 const roomSchema = mongoose.Schema({
-    joinId: {
-        type: String,
+    creatorId: {
+        type: Number,
         trim: true,
         required: true,
         unique: true,
     },
-    creator: {
+    creatorName: {
         type: String,
         trim: true,
         required: true,
         unique: true,
-    },
-    fans: {
-        type: Array,
-        required: true,
     },
     song: {
         type: String,
         required: true,
-    }
+    },
+    tracked: {
+        type: Boolean,
+        required: true,
+    },
 });
 
 const Room = module.exports = mongoose.model("Room", roomSchema, "rooms");
