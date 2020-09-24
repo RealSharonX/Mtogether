@@ -25,8 +25,13 @@ router.post("/", (req, res) => {
         if (err) {
             console.log(err)
         } else {
-            console.log(req.body.id);
-            req.io.to(result._id).broadcast.emit("newMusic", req.body.song);
+            if (res.tracked) {
+                console.log(`User tracked already, changing song from ${res.song} to ${req.body.song}`);
+                req.io.to(result._id).emit("newMusic", req.body.song);
+            } else {
+                console.log(req.body.id);
+                req.io.emit("user-tracked", req.body.id);
+            }
         }
     })
     res.sendStatus(200).end();
