@@ -1,8 +1,20 @@
-<% if (errors) { %>
-    <div><%=errors%></div>
-<% } %>
-<form method="POST" action="/join">
-    <label for="roomName">room code pls</label></br>
-    <input type="text" name="roomName"></br>
-    <input type="submit" value="Submit">
-</form> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/stylesheets/main.css">
+    <title>Mtogether</title>
+</head>
+<body>
+    <% if (error) { %>
+        <div><%=error%></div>
+    <% } %>
+    <form method="POST" action="/join">
+        <label for="roomName">room code pls</label></br>
+        <input type="text" name="roomName"></br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

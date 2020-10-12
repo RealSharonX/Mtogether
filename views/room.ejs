@@ -4,15 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/stylesheets/main.css">
     <title>Mtogether</title>
-    <script> 
-        const roomName = <%= roomName %>;
+    <script>
+        const roomName = "<%= roomName %>";
     </script>
-    <script src="/socket.io/socket.io.js"></script>
+    <script defer src="/socket.io/socket.io.js"></script>
     <script defer src="/javascripts/room.js "></script>
 </head>
 <body>
-    <iframe width="1280" height="720" src="https://www.youtube.com/embed/eJnQBXmZ7Ek" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <div id="ct"> 
+        <iframe id="yt" width="1280" height="720" src="https://www.youtube.com/embed/<%= currentSong %>?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <a href="/">HOME PAGE</a>
 </body>
 </html>
 

@@ -12,7 +12,6 @@ router.get("/", isAuthorized, (req, res) => {
         res.redirect("/create/share")
     } else {
         res.render("create", {
-            creator: req.user.creatorName,
             user: req.user.creatorId,
         });
     }
@@ -25,8 +24,8 @@ router.post("/", (req, res) => {
         if (err) {
             console.log(err)
         } else {
-            if (res.tracked) {
-                console.log(`User tracked already, changing song from ${res.song} to ${req.body.song}`);
+            if (result.tracked) {
+                console.log(`User tracked already, changing song from ${result.song} to ${req.body.song}`);
                 req.io.to(result._id).emit("newMusic", req.body.song);
             } else {
                 console.log(req.body.id);
