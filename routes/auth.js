@@ -3,7 +3,7 @@ const passport = require("passport");
 const router = express.Router();
 router.get("/", passport.authenticate("discord"));
 router.get("/redirect", passport.authenticate("discord", {
-    failureRedirect: "/forbidden",
+    failureRedirect: "/",
     successRedirect: "/create"
 }));
 module.exports = router;

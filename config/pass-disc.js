@@ -20,10 +20,12 @@ passport.use(new DiscordStrategy({
     scope: [ "identify", "email", "guilds" ]
 }, async (accessToken, refreshToken, profile, done) => {
     try {
-        const room = await Room.findOne({ creator: profile.id });
+        const room = await Room.findOne({ creatorId: profile.id });
         if (room) {
+            console.log("room found")
             done(null, room)
         } else {
+            console.log("creating room")
             const newRoom = await Room.create({
                 creatorId: profile.id,
                 creatorName: profile.username,

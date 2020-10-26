@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 
 const roomSchema = mongoose.Schema({
     creatorId: {
-        type: Number,
+        type: String,
         trim: true,
         required: true,
         unique: true,
